@@ -27,6 +27,10 @@ public:
     FGameplayAttributeData Health;
     ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, Health)
 
+    UPROPERTY(BlueprintReadOnly, Category = "Damage")
+    FGameplayAttributeData Damage;
+    ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, Damage)
+
     UPROPERTY(BlueprintReadOnly, Category = "Strength")
     FGameplayAttributeData Strength;
     ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, Strength)

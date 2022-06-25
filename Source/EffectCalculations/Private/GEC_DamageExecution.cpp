@@ -9,12 +9,14 @@ struct FDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Strength);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Health);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Damage);
 
 	// Default constructor.
 	FDamageStatics()
 	{
 		// Capturedef definitions for attributes. 
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UCharacterAttributeSetBase, Strength, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UCharacterAttributeSetBase, Damage, Source, false);
 
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UCharacterAttributeSetBase, Armor, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UCharacterAttributeSetBase, Health, Target, false);
@@ -34,6 +36,7 @@ UGEC_DamageExecution::UGEC_DamageExecution()
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
 	RelevantAttributesToCapture.Add(DamageStatics().StrengthDef);
 	RelevantAttributesToCapture.Add(DamageStatics().HealthDef);
+	RelevantAttributesToCapture.Add(DamageStatics().DamageDef);
 }
 
 // Do the damage calculations and modify health accordingly
@@ -57,7 +60,10 @@ void UGEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomExe
 	EvaluationParameters.TargetTags = TargetTags;
 
 	//Capturing the weapon damage.
-	float BaseDamage = FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
+
+	float BaseDamage = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageDef, EvaluationParameters, BaseDamage);
+	BaseDamage += FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
 
 	//Capturing Armor
 	float Armor = 0.f;
